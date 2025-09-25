@@ -19,8 +19,8 @@ detector = htm.handDetector(maxHands=1)
 wCam, hCam = 640, 480
 wScr, hScr = autopy.screen.size()
 frameR = 100
-smoothening = 5
-sensitivity = 2   
+smoothening = 7
+sensitivity = 1.5   
 
 cap.set(3, wCam)
 cap.set(4, hCam)
@@ -31,6 +31,10 @@ plocX, plocY = 0, 0
 clocX, clocY = 0, 0
 prev_y = 0
 mouse = Controller()
+
+
+rightClick = True
+
 
 firstClick = 0
 
@@ -60,7 +64,7 @@ while True:
         )
 
         # Mouse movement (only index finger up)
-        if fingers[1] == 1 and fingers[2] == 0:
+        if fingers[1] == 1 and fingers[2] == 0 and fingers[0]==0:
             
             
             
@@ -69,6 +73,7 @@ while True:
             
             x3 = np.clip(x3, 0, wScr - 1)
             y3 = np.clip(y3, 0, hScr - 1)
+
 
             clocX = plocX + (x3 - plocX) / smoothening
             clocY = plocY + (y3 - plocY) / smoothening
@@ -92,6 +97,14 @@ while True:
         # ---- Click / Double Click (Thumb + Index) ----
         length_thumb_index, img, _ = detector.findDistance(8, 4, img)
         click_threshold = 25
+        
+        if fingers[4]==1 and fingers[1]==0 and fingers[2]==0 and fingers[3]==0:
+            if rightClick == True :
+                mouse.click(Button.right , 1)
+                rightClick= False
+        else:
+            rightClick = True    
+
 
         if length_thumb_index < click_threshold:
             if click:
@@ -107,7 +120,7 @@ while True:
             click = True
 
         # ---- Drag with pinch (Thumb + Index) ----
-        pinch_threshold = 25
+        pinch_threshold = 20
         if length_thumb_index < pinch_threshold:
             if not pinch_start_detected:
                 pinch_start_detected = True
