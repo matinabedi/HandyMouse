@@ -19,7 +19,8 @@ detector = htm.handDetector(maxHands=1)
 wCam, hCam = 640, 480
 wScr, hScr = autopy.screen.size()
 frameR = 100
-smoothening = 7
+smoothening = 5
+sensitivity = 2   
 
 cap.set(3, wCam)
 cap.set(4, hCam)
@@ -60,8 +61,14 @@ while True:
 
         # Mouse movement (only index finger up)
         if fingers[1] == 1 and fingers[2] == 0:
-            x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
-            y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr))
+            
+            
+            
+            x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr)) * sensitivity
+            y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr)) * sensitivity
+            
+            x3 = np.clip(x3, 0, wScr - 1)
+            y3 = np.clip(y3, 0, hScr - 1)
 
             clocX = plocX + (x3 - plocX) / smoothening
             clocY = plocY + (y3 - plocY) / smoothening
@@ -111,8 +118,8 @@ while True:
                     mouse.press(Button.left)
 
             if drag_active:
-                x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
-                y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr))
+                x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr)) * sensitivity
+                y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr)) * sensitivity
                 clocX = plocX + (x3 - plocX) / smoothening
                 clocY = plocY + (y3 - plocY) / smoothening
                 x_mouse = np.clip(clocX, 0, wScr - 1)
