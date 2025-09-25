@@ -28,7 +28,7 @@ pynput==1.8.1
 ## 🚀 How to Run
 1. Clone the repository:
    ```bash
-   git clone https://github.com/matinabedi/HandyMouse-.git
+   git clone https://github.com/matinabedi/HandyMouse.git
    cd HandyMouse
 2. Install dependencies:
     ```bash
